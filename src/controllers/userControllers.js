@@ -17,7 +17,7 @@ const getUserById = (req, res) => {
 
   database
     .query("select * from users where id = ?", [id])
-    .then((users) => {
+    .then(([users]) => {
       if (users.length > 0) {
         res.json(users[0]);
       } else {

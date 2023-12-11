@@ -1,10 +1,28 @@
 const { database } = require("../../database");
 
-const getUsers = (req, res) => {
+const getUsers = (_, res) => {
   database
     .query("select * from users")
     .then((users) => {
       res.json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const postUser = (req, res) => {
+  const { firstname, lastname, email, city } = req.body;
+
+  database
+    .query(
+      "INSERT INTO users(firstname, lastname, email, city) VALUES (?, ?, ?, ?)",
+      [firstname, lastname, email, city]
+    )
+    .then(([result]) => {
+      console.log(result.insertId);
+      res.status(201).json({ id: result.insertId });
     })
     .catch((err) => {
       console.error(err);
@@ -31,5 +49,6 @@ const getUserById = (req, res) => {
 };
 module.exports = {
   getUsers,
-  getUserById
+  getUserById,
+  postUser,
 };
